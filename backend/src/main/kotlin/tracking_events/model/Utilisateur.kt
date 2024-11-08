@@ -16,15 +16,16 @@ data class Utilisateur(
     var email: String, // Champ obligatoire
     var phone: String? = null, // Champ optionnel
 
-    @ElementCollection
+    @OneToMany(mappedBy = "creator")
     var eventCreator: MutableList<Event>? = mutableListOf(), // Liste des événements créés par l'utilisateur
 
-    @ElementCollection
+    @ManyToMany(mappedBy = "organizers")
     var eventOrganisateur: MutableList<Event>? = mutableListOf(), // Liste des événements où l'utilisateur est organisateur
 
-    @ElementCollection
-    var eventParticipant: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur participe
-
+    @ManyToMany(mappedBy = "participants")
+    var eventsParticipant: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur participe
+    @ManyToMany(mappedBy = "waitingList")
+    var waitingList: MutableList<Event>? = mutableListOf(),
     var preferredContact: String? = null, // Moyen de contact préféré (optionnel)
     var profilePicture: String? = null, // URL de l'image de profil (optionnel)
 

@@ -58,7 +58,7 @@ export default {
   methods: {
     async getEvents() {
       try {
-        const response = await axios.get('http://localhost:8081/api/events') // URL de votre API backend
+        const response = await axios.get(API+'/events') // URL de votre API backend
         this.events = response.data
       } catch (error) {
         console.error('Erreur lors de la récupération des événements:', error)

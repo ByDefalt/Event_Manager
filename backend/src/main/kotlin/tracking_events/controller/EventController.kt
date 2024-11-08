@@ -18,19 +18,4 @@ class EventController(private val eventService: EventService) {
         return eventService.getEventById(id)
     }
 
-    @PostMapping
-    fun createEvent(@RequestBody event: Event): Event {
-        return eventService.createEvent(event)
-    }
-
-    @PutMapping("/{id}")
-    fun updateEvent(@PathVariable id: Long): Event {
-        return eventService.updateEvent(id)
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteEvent(@PathVariable id: Long) {
-        eventService.deleteEvent(id)
-    }
-
 }
