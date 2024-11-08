@@ -9,11 +9,13 @@ data class Utilisateur(
     val id: Long = 0,
 
     var pseudo: String? = null, // Champ optionnel
+
     var firstName: String? = null,
+
     var lastName: String? = null,
 
-
     var email: String, // Champ obligatoire
+
     var phone: String? = null, // Champ optionnel
 
     @OneToMany(mappedBy = "creator")
@@ -23,13 +25,16 @@ data class Utilisateur(
     var eventOrganisateur: MutableList<Event>? = mutableListOf(), // Liste des événements où l'utilisateur est organisateur
 
     @ManyToMany(mappedBy = "participants")
+
     var eventsParticipant: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur participe
     @ManyToMany(mappedBy = "waitingList")
-    var waitingList: MutableList<Event>? = mutableListOf(),
+
+    var waitingList: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur est en attente
+
     var preferredContact: String? = null, // Moyen de contact préféré (optionnel)
-    var profilePicture: String? = null, // URL de l'image de profil (optionnel)
 
     var notifications: Boolean = false, // Notifications activées pour les événements (par défaut false)
+
     var bio: String? = null, // Brève description ou bio de l'utilisateur (optionnel)
 
     var registrationDate: LocalDateTime = LocalDateTime.now() // Date d'inscription (par défaut à la date actuelle)
@@ -41,14 +46,14 @@ data class Utilisateur(
     }
 
     override fun hashCode(): Int {
-        return id.hashCode() // Utiliser l'ID pour garantir une comparaison cohérente
+        return id.hashCode()
     }
     init {
         validateUser()
     }
 
     private fun validateUser() {
-        // Validation : Pseudo optionnel si prénom et nom sont remplis
+
         require(!(firstName.isNullOrEmpty() && !lastName.isNullOrEmpty())) {
             "Si le prénom est rempli, le nom doit l'être aussi, et inversement"
         }

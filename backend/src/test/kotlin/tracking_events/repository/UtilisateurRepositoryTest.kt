@@ -1,4 +1,4 @@
-package tracking_events
+package tracking_events.repository
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
