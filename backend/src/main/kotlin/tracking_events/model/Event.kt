@@ -8,11 +8,14 @@ data class Event(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
+    @Column(nullable = false)
     var name: String,
 
-    var startHour: String,
+    @Column(nullable = false)
+    var startHour: LocalDateTime,
 
-    var finishHour: String,
+    @Column(nullable = false)
+    var finishHour: LocalDateTime,
 
     var description: String? = null,
 
@@ -40,6 +43,7 @@ data class Event(
     )
     var participants: MutableList<Utilisateur>? = mutableListOf(),
 
+    @Column(nullable = false)
     var limitedPlaceNum: Int = 0, // Limitation du nombre de places (0 si illimité)
 
     @ManyToMany
@@ -51,12 +55,16 @@ data class Event(
     )
     var waitingList: MutableList<Utilisateur>? = mutableListOf(),
 
+    @Column(nullable = false)
     var isCancelled: Boolean = false,
 
+    @Column(nullable = false)
     var isPrivate: Boolean = false,
 
+    @Column(nullable = false)
     var notificationEnabled: Boolean = true,
 
+    @Column(nullable = false)
     var createdDate: LocalDateTime = LocalDateTime.now(),
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -65,11 +73,17 @@ data class Event(
     @OneToOne(fetch = FetchType.LAZY)
     var nextEvent: Event? = null // Lien vers l'événement suivant, type DoubleChainage
 ) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Event) return false
+        return id == other.id
+    }
 
-    // Validation des champs dans le bloc init
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
     init {
         require(name.isNotBlank()) { "Name cannot be empty" }
-        require(startHour.isNotBlank()) { "Start hour cannot be empty" }
-        require(finishHour.isNotBlank()) { "Finish hour cannot be empty" }
     }
 }

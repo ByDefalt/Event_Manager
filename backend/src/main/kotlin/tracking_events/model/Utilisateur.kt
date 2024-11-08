@@ -14,6 +14,7 @@ data class Utilisateur(
 
     var lastName: String? = null,
 
+    @Column(nullable = false)
     var email: String, // Champ obligatoire
 
     var phone: String? = null, // Champ optionnel
@@ -27,16 +28,18 @@ data class Utilisateur(
     @ManyToMany(mappedBy = "participants")
 
     var eventsParticipant: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur participe
-    @ManyToMany(mappedBy = "waitingList")
 
+    @ManyToMany(mappedBy = "waitingList")
     var waitingList: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur est en attente
 
     var preferredContact: String? = null, // Moyen de contact préféré (optionnel)
 
+    @Column(nullable = false)
     var notifications: Boolean = false, // Notifications activées pour les événements (par défaut false)
 
     var bio: String? = null, // Brève description ou bio de l'utilisateur (optionnel)
 
+    @Column(nullable = false)
     var registrationDate: LocalDateTime = LocalDateTime.now() // Date d'inscription (par défaut à la date actuelle)
 ){
     override fun equals(other: Any?): Boolean {
@@ -49,11 +52,6 @@ data class Utilisateur(
         return id.hashCode()
     }
     init {
-        validateUser()
-    }
-
-    private fun validateUser() {
-
         require(!(firstName.isNullOrEmpty() && !lastName.isNullOrEmpty())) {
             "Si le prénom est rempli, le nom doit l'être aussi, et inversement"
         }
@@ -67,6 +65,6 @@ data class Utilisateur(
         }
 
         require(email.isNotBlank()){"Email ne peut pas être vide"}
-
     }
+
 }
