@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 open class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:8082")  // L'URL de votre frontend Vue.js
+            .allowedOrigins("http://localhost:8080")  // L'URL de votre frontend Vue.js
             .allowedMethods("GET", "POST", "PUT", "DELETE")
     }
 }

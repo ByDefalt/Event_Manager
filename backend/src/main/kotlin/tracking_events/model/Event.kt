@@ -82,7 +82,25 @@ data class Event(
     override fun hashCode(): Int {
         return id.hashCode()
     }
-
+    constructor() : this(
+        id = 0,
+        name = "m",
+        startHour = LocalDateTime.now(),
+        finishHour = LocalDateTime.now().plusHours(1),
+        description = null,
+        location = null,
+        creator = Utilisateur(),
+        organizers = mutableListOf(),
+        participants = mutableListOf(),
+        limitedPlaceNum = 0,
+        waitingList = mutableListOf(),
+        isCancelled = false,
+        isPrivate = false,
+        notificationEnabled = true,
+        createdDate = LocalDateTime.now(),
+        previousEvent = null,
+        nextEvent = null
+    )
     init {
         require(name.isNotBlank()) { "Name cannot be empty" }
     }

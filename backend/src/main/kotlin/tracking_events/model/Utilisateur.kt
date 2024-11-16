@@ -66,5 +66,21 @@ data class Utilisateur(
 
         require(email.isNotBlank()){"Email ne peut pas être vide"}
     }
+    constructor() : this(
+        id = 0,
+        pseudo = "m",
+        firstName = "m",
+        lastName = "m",
+        email = "m",
+        phone = null,
+        eventCreator = mutableListOf(),
+        eventOrganisateur = mutableListOf(),
+        eventsParticipant = mutableListOf(),
+        waitingList = mutableListOf(),
+        preferredContact = null,
+        notifications = false,
+        bio = null,
+        registrationDate = LocalDateTime.now()
+    )
 
 }
