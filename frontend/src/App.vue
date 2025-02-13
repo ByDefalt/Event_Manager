@@ -1,14 +1,14 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <AffichageCalendrier/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AffichageCalendrier from './components/AffichageCalendrier.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AffichageCalendrier
   }
 }
 </script>
