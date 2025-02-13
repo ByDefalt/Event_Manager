@@ -1,51 +1,63 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <button @click="getEvents">Récupérer les événements</button>
-    <div v-if="eventsFetched">
-    <div v-if="events.length > 0 ">
-      <h2>Liste des événements</h2>
-      <ul>
-        <li v-for="event in events" :key="event.id">
-          {{ event }}
-        </li>
-      </ul>
+  <div>
+    <h1>Calendrier</h1>
+    <div style="width: 500px; height: 500px;">
+      <FullCalendar :options="calendarOptions" />
     </div>
-    <div v-else>
-      <p>Aucun événement disponible</p>
-    </div>
-  </div>
   </div>
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import axios from 'axios';
+import FullCalendar from '@fullcalendar/vue3';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import frLocale from '@fullcalendar/core/locales/fr';
 
-export default {
+export default defineComponent({
+  components: {
+    FullCalendar
+  },
   data() {
     return {
       msg: 'Bienvenue sur la gestion des événements',
-      events: [],
       eventsFetched: false,
-    }
+      calendarOptions: {
+        plugins: [timeGridPlugin, interactionPlugin],
+        initialView: 'timeGridWeek',
+        locale: frLocale,
+        allDaySlot: false,
+        events: [
+          { title: 'Événement 1', start: '2025-02-13T10:00:00', end: '2025-02-13T12:00:00' },
+          { title: 'Événement 2', start: '2025-02-14T14:00:00', end: '2025-02-14T16:00:00' }
+        ]
+      }
+    };
   },
   methods: {
     async getEvents() {
       try {
         const apiUrl = process.env.VUE_APP_API;
-        const response = await axios.get(`${apiUrl}/events`); // URL de votre API backend
-        this.events = response.data
+        const response = await axios.get(`${apiUrl}/events`);
+        this.calendarOptions.events = response.data.map(event => ({
+          title: event.name,
+          start: event.startHour,
+          end: event.finishHour
+        }));
       } catch (error) {
-        console.error('Erreur lors de la récupération des événements:', error)
-      }finally {
-        this.eventsFetched = true; // Indiquer que l'appel a été effectué (qu'il y ait des événements ou non)
+        console.error('Erreur lors de la récupération des événements:', error);
+      } finally {
+        this.eventsFetched = true;
       }
     }
+  },
+  mounted() {
+    this.getEvents();
   }
-}
+});
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;

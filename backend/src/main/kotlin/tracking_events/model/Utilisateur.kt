@@ -42,6 +42,24 @@ data class Utilisateur(
     @Column(nullable = false)
     var registrationDate: LocalDateTime = LocalDateTime.now() // Date d'inscription (par défaut à la date actuelle)
 ){
+    fun toDTO(): UtilisateurDTO {
+        return UtilisateurDTO(
+            pseudo = this.pseudo,
+            firstName = this.firstName,
+            lastName = this.lastName,
+            email = this.email,
+            phone = this.phone,
+            eventCreator = (this.eventCreator?.map { it.name }?.toMutableList()),
+            eventOrganisateur = (this.eventOrganisateur?.map { it.name }?.toMutableList()),
+            eventsParticipant = (this.eventsParticipant?.map { it.name }?.toMutableList()),
+            waitingList = (this.waitingList?.map { it.name }?.toMutableList()),
+            preferredContact = this.preferredContact,
+            notifications = this.notifications,
+            bio = this.bio,
+            registrationDate = this.registrationDate
+        )
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Utilisateur) return false

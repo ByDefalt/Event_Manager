@@ -73,6 +73,29 @@ data class Event(
     @OneToOne(fetch = FetchType.LAZY)
     var nextEvent: Event? = null // Lien vers l'événement suivant, type DoubleChainage
 ) {
+    fun toDTO(): EventDTO {
+        return EventDTO(
+            name = this.name,
+            startHour = this.startHour,
+            finishHour = this.finishHour,
+            description = this.description,
+            location = this.location,
+            creator = this.creator.pseudo ?: (this.creator.firstName + " " + this.creator.lastName),
+            organizers = (this.organizers.map { it.pseudo ?: (it.firstName + "" + it.lastName) }.toMutableList()),
+            participants = this.participants?.map { it.pseudo ?: (it.firstName + "" + it.lastName) }?.toMutableList(),
+            limitedPlaceNum = this.limitedPlaceNum,
+            waitingList = this.waitingList?.map { it.pseudo ?: (it.firstName + "" + it.lastName) }?.toMutableList(),
+            isCancelled = this.isCancelled,
+            isPrivate = this.isPrivate,
+            notificationEnabled = this.notificationEnabled,
+            createdDate = this.createdDate,
+            previousEvent = this.previousEvent,
+            nextEvent = this.nextEvent
+        )
+    }
+
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Event) return false
