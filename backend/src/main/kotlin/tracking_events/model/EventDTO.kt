@@ -1,6 +1,5 @@
 package tracking_events.model
 
-import jakarta.persistence.*
 import java.time.LocalDateTime
 
 class EventDTO (

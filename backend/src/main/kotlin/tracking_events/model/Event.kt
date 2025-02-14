@@ -68,10 +68,10 @@ data class Event(
     var createdDate: LocalDateTime = LocalDateTime.now(),
 
     @OneToOne(fetch = FetchType.LAZY)
-    var previousEvent: Event? = null, // Lien vers l'événement précédent, type DoubleChainage
+    var previousEvent: Event? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
-    var nextEvent: Event? = null // Lien vers l'événement suivant, type DoubleChainage
+    var nextEvent: Event? = null
 ) {
     fun toDTO(): EventDTO {
         return EventDTO(

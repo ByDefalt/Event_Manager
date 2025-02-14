@@ -7,7 +7,7 @@
     </div>
   </div>
   </div>
-  <AddEventModal v-if="showModal" @close="showModal = false" @add-event="addEvent" />
+  <AddEventModal v-if="showModal" @close="showModal = false" @add-event="addEvent" :utilisateurs="utilisateurs" />
 </template>
 
 <script>
@@ -18,7 +18,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import frLocale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import AddEventModal from './AddEventModal.vue'; // Import du composant modal
+import AddEventModal from './AddEventModal.vue';
 
 export default defineComponent({
   name: 'AffichageCalendrier',
@@ -28,6 +28,7 @@ export default defineComponent({
   },
   data() {
     return {
+      utilisateurs: [],
       showModal: false,
       newEvent: {
         title: '',
@@ -71,10 +72,20 @@ export default defineComponent({
       } catch (error) {
         alert('Erreur lors de la récupération des événements:');
       }
+    },
+    async getUsers() {
+      try {
+        const apiUrl = process.env.VUE_APP_API;
+        const response = await axios.get(`${apiUrl}/users`);
+        this.utilisateurs = response.data.map(user => ({ name: user.pseudo }));
+      } catch (error) {
+        alert('Erreur lors de la récupération des événements:');
+      }
     }
   },
   mounted() {
     this.getEvents();
+    this.getUsers();
   }
 });
 </script>

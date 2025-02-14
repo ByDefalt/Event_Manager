@@ -8,39 +8,39 @@ data class Utilisateur(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    var pseudo: String? = null, // Champ optionnel
+    var pseudo: String? = null,
 
     var firstName: String? = null,
 
     var lastName: String? = null,
 
     @Column(nullable = false)
-    var email: String, // Champ obligatoire
+    var email: String,
 
-    var phone: String? = null, // Champ optionnel
+    var phone: String? = null,
 
     @OneToMany(mappedBy = "creator")
-    var eventCreator: MutableList<Event>? = mutableListOf(), // Liste des événements créés par l'utilisateur
+    var eventCreator: MutableList<Event>? = mutableListOf(),
 
     @ManyToMany(mappedBy = "organizers")
-    var eventOrganisateur: MutableList<Event>? = mutableListOf(), // Liste des événements où l'utilisateur est organisateur
+    var eventOrganisateur: MutableList<Event>? = mutableListOf(),
 
     @ManyToMany(mappedBy = "participants")
 
-    var eventsParticipant: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur participe
+    var eventsParticipant: MutableList<Event>? = mutableListOf(),
 
     @ManyToMany(mappedBy = "waitingList")
-    var waitingList: MutableList<Event>? = mutableListOf(), // Liste des événements auxquels l'utilisateur est en attente
+    var waitingList: MutableList<Event>? = mutableListOf(),
 
-    var preferredContact: String? = null, // Moyen de contact préféré (optionnel)
-
-    @Column(nullable = false)
-    var notifications: Boolean = false, // Notifications activées pour les événements (par défaut false)
-
-    var bio: String? = null, // Brève description ou bio de l'utilisateur (optionnel)
+    var preferredContact: String? = null,
 
     @Column(nullable = false)
-    var registrationDate: LocalDateTime = LocalDateTime.now() // Date d'inscription (par défaut à la date actuelle)
+    var notifications: Boolean = false,
+
+    var bio: String? = null,
+
+    @Column(nullable = false)
+    var registrationDate: LocalDateTime = LocalDateTime.now()
 ){
     fun toDTO(): UtilisateurDTO {
         return UtilisateurDTO(
