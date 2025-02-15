@@ -4,43 +4,47 @@
       <h3>Ajouter un événement</h3>
       <div class="form-group">
         <label for="title">Titre : </label>
-        <input id="title" v-model="event.title" type="text" placeholder="Nom de l'événement" />
+        <input id="title" v-model="eventDTO.name" type="text" placeholder="Nom de l'événement" />
+        <span v-if="erreurs.nom">{{ erreurs.nom }}</span>
       </div>
       <div class="form-group">
         <label for="start">Date de début : </label>
-        <input id="start" v-model="event.start" type="datetime-local" />
+        <input id="start" v-model="eventDTO.startHour" type="datetime-local" />
       </div>
       <div class="form-group">
         <label for="end">Date de fin : </label>
-        <input id="end" v-model="event.end" type="datetime-local" />
+        <input id="end" v-model="eventDTO.finishHour" type="datetime-local" />
       </div>
       <div class="form-group">
         <label for="description">Description : </label>
-        <input id="description" v-model="event.description" type="text" />
+        <input id="description" v-model="eventDTO.description" type="text" />
+        <span v-if="erreurs.nom">{{ erreurs.description }}</span>
       </div>
       <div class="form-group">
         <label for="location">Lieu : </label>
-        <input id="location" v-model="event.location" type="text" />
+        <input id="location" v-model="eventDTO.location" type="text" />
+        <span v-if="erreurs.nom">{{ erreurs.location }}</span>
       </div>
       <div class="form-group">
         <label for="isPrivate">Privée : </label>
-        <input id="isPrivate" v-model="event.isPrivate" type="checkbox" />
+        <input id="isPrivate" v-model="eventDTO.isPrivate" type="checkbox" />
       </div>
       <div class="form-group">
         <label for="notificationEnabled">Notification : </label>
-        <input id="notificationEnabled" v-model="event.notificationEnabled" type="checkbox" />
+        <input id="notificationEnabled" v-model="eventDTO.notificationEnabled" type="checkbox" />
       </div>
       <div class="form-group">
         <label for="limitedPlace">Place Limité : </label>
-        <input id="limitedPlace" type="checkbox" v-model="isLimitedPlace" />
+        <input id="limitedPlace" type="checkbox" v-model="eventDTO.isLimitedPlace" />
       </div>
       <div class="form-group">
         <label for="limitedPlaceNum">Nombre : </label>
-        <input id="limitedPlaceNum" v-model="limitedPlaceNum" type="Number" :disabled="!isLimitedPlace" />
+        <input id="limitedPlaceNum" v-model="eventDTO.limitedPlaceNum" type="Number" :disabled="!isLimitedPlace" />
+        <span v-if="erreurs.nom">{{ erreurs.limitedPlaceNum }}</span>
       </div>
       <div class="form-group">
         <label for="organizers">Organisateurs : </label>
-        <multiselect v-model="Organizers" :options="utilisateurs" :multiple="true" :searchable="true"
+        <multiselect v-model="eventDTO.organizers" :options="utilisateurs" :multiple="true" :searchable="true"
           :close-on-select="false" placeholder="Choisissez des organisateurs" label="name" track-by="name" />
       </div>
       <div class="button-group">
@@ -54,7 +58,8 @@
 <script>
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
-
+import axios from 'axios';
+import { toRaw } from 'vue';
 
 export default {
   components: { Multiselect },
@@ -63,27 +68,72 @@ export default {
   },
   data() {
     return {
-      Organizers: [],
-      isLimitedPlace: false,
+      erreurs: {},
+      eventDTO: {
+        name: "",
+        startHour: new Date().toISOString().slice(0, -1),  // Supprime le 'Z' si nécessaire
+        finishHour: new Date().toISOString().slice(0, -1),
+        createdDate: new Date().toISOString().slice(0, -1),
+        creator: "vcxvcx",
+        description: '',
+        location: '',
+        isPrivate: false,
+        notificationEnabled: false,
+        isLimitedPlace: false,
+        limitedPlaceNum: 0,
+        organizers: [],
+        participants: [],
+        waitingList: [],
+        previousEvent: null,
+        nextEvent: null,
+      },
       event: {
-        title: '',
-        start: '',
-        end: ''
+        title: "",
+        start: "",
+        end: "",
       }
     };
   },
   methods: {
-    saveEvent() {
-      if (this.event.title && this.event.start && this.event.end) {
-        if (this.event.start < this.event.end) {
-          this.$emit('add-event', { ...this.event });
-          this.resetForm();
-        } else {
-          alert('La date de fin doit être supérieure à la date de début');
-          return;
-        }
-      } else {
-        alert('Veuillez remplir tous les champs');
+    async saveEvent() {
+      this.verifyForm();
+      this.event.title = this.eventDTO.name;
+      this.event.start = this.eventDTO.startHour;
+      this.event.end = this.eventDTO.finishHour;
+      this.$emit('add-event', { ...this.event });
+      this.postEvents();
+      this.resetForm();
+    },
+    async postEvents() {
+      const apiUrl = process.env.VUE_APP_API;
+      await axios.post(`${apiUrl}/events`, toRaw(this.eventDTO));
+    },
+    verifyForm() {
+      if (!this.eventDTO.name) {
+        this.erreurs.nom = "Le nom de l'événement est obligatoire";
+        return;
+      }
+      if (!this.eventDTO.description) {
+        this.erreurs.description = "La description de l'événement est obligatoire";
+        return;
+      }
+      if (!this.eventDTO.location) {
+        this.erreurs.location = "Le lieu de l'événement est obligatoire";
+        return;
+      }
+      if (this.eventDTO.isLimitedPlace && this.eventDTO.limitedPlaceNum <= 0) {
+        this.erreurs.limitedPlaceNum = "Le nombre de place doit être supérieur à 0";
+        return;
+      }
+      if (this.eventDTO.startHour >= this.eventDTO.finishHour) {
+        alert('La date de fin doit être supérieure à la date de début');
+        return;
+      }
+      if (this.eventDTO.startHour) {
+        this.eventDTO.startHour += ':00'; // Ajoute les secondes manquantes
+      }
+      if (this.eventDTO.finishHour) {
+        this.eventDTO.finishHour += ':00';
       }
     },
     resetForm() {

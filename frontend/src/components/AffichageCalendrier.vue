@@ -64,6 +64,7 @@ export default defineComponent({
       try {
         const apiUrl = process.env.VUE_APP_API;
         const response = await axios.get(`${apiUrl}/events`);
+        console.log(response.data);
         this.calendarOptions.events = response.data.map(event => ({
           title: event.name,
           start: event.startHour,

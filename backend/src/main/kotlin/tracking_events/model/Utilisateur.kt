@@ -8,7 +8,7 @@ data class Utilisateur(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    var pseudo: String? = null,
+    var pseudo: String = "",
 
     var firstName: String? = null,
 
@@ -76,10 +76,6 @@ data class Utilisateur(
 
         require(!(lastName.isNullOrEmpty() && !firstName.isNullOrEmpty())) {
             "Si le prénom est rempli, le nom doit l'être aussi, et inversement"
-        }
-
-        require(!(pseudo.isNullOrEmpty() && firstName.isNullOrEmpty() && lastName.isNullOrEmpty())) {
-            "Le pseudo doit être rempli ou le nom/prénom"
         }
 
         require(email.isNotBlank()){"Email ne peut pas être vide"}

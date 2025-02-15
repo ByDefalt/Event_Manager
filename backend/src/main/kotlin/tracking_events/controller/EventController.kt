@@ -19,4 +19,9 @@ class EventController(private val eventService: EventService) {
         return eventService.getEventById(id).toDTO();
     }
 
+    @PostMapping
+    fun createEvent(@RequestBody eventDTO: EventDTO): Event {
+        return eventService.createEvent(eventDTO)
+    }
+
 }

@@ -17,4 +17,11 @@ class UtilisateurService(private val utilisateurRepository: UtilisateurRepositor
             .orElseThrow { RuntimeException("Utilisateur not found!") }
     }
 
+    fun getUtilisateurByPseudo(pseudo: String): Utilisateur {
+        return utilisateurRepository.findByPseudo(pseudo)
+            .orElseThrow { RuntimeException("Utilisateur not found!") }
+    }
+
+
+
 }

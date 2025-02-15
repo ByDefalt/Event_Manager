@@ -1,5 +1,6 @@
 package tracking_events.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime
 
 class EventDTO (
@@ -21,5 +22,4 @@ class EventDTO (
     var previousEvent: Event?,
     var nextEvent: Event?
     ){
-
 }
